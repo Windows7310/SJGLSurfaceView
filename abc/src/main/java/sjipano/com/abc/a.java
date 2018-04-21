@@ -1,5 +1,11 @@
 package sjipano.com.abc;
 
+import android.content.Context;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 
 /**
@@ -84,5 +90,27 @@ public class a {
                 bbx, bby, bbz,
                 ccx, ccy, ccz,
                 iteNum - 1, list);
+    }
+
+    public static String readAsset(String name, Context context) throws Exception {
+        InputStream is = null;
+        try {
+            is = context.getAssets().open(name);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return readTextFromSDcard(is);
+    }
+
+    public static String readTextFromSDcard(InputStream is) throws Exception {
+        InputStreamReader reader = new InputStreamReader(is);
+        BufferedReader bufferedReader = new BufferedReader(reader);
+        StringBuilder buffer = new StringBuilder("");
+        String str;
+        while ((str = bufferedReader.readLine()) != null) {
+            buffer.append(str);
+            buffer.append("\n");
+        }
+        return buffer.toString();
     }
 }

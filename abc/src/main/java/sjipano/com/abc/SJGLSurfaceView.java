@@ -11,12 +11,9 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 
-import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -46,6 +43,8 @@ public class SJGLSurfaceView extends GLSurfaceView {
     private int mWidth = 1080, mHeight = 1720;
     private static String FRAGMENT_SHADER = "1";
     private static String VERTEX_SHADER = "1";
+
+    private SJGLMoveListener listener;
 
     private float mClickX, mClickY;//用于判断 是否是点击事件
 
@@ -143,8 +142,8 @@ public class SJGLSurfaceView extends GLSurfaceView {
 
     private void init() {
         try {
-            FRAGMENT_SHADER = readAsset("fragshader.frags", getContext());
-            VERTEX_SHADER = readAsset("vertshader.vs", getContext());
+            FRAGMENT_SHADER = a.readAsset("fragshader.frags", getContext());
+            VERTEX_SHADER = a.readAsset("vertshader.vs", getContext());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -241,13 +240,13 @@ public class SJGLSurfaceView extends GLSurfaceView {
         requestRender();
     }
 
-    public void getGLESTextureLimitBelowLollipop() {
+    private void getGLESTextureLimitBelowLollipop() {
         int[] maxSize = new int[1];
         GLES10.glGetIntegerv(GLES10.GL_MAX_TEXTURE_SIZE, maxSize, 0);
         mMaxSize = maxSize[0];
     }
 
-    public void getGLESTextureLimitEqualAboveLollipop() {
+    private void getGLESTextureLimitEqualAboveLollipop() {
         EGL10 egl = (EGL10) EGLContext.getEGL();
         EGLDisplay dpy = egl.eglGetDisplay(EGL10.EGL_DEFAULT_DISPLAY);
         int[] vers = new int[2];
@@ -293,7 +292,7 @@ public class SJGLSurfaceView extends GLSurfaceView {
         return (float) Math.sqrt(x * x + y * y);//两点间的距离
     }
 
-    public class Renderer implements GLSurfaceView.Renderer {
+    private class Renderer implements GLSurfaceView.Renderer {
 
         private List<Float> mCoords3DList = new ArrayList<>();//球面坐标集合
         private final int IterationsNum = 5;
@@ -362,13 +361,13 @@ public class SJGLSurfaceView extends GLSurfaceView {
                     IterationsNum, mCoords3DList);
         }
 
-        public void setBitmap(Bitmap bitmap) {
+        private void setBitmap(Bitmap bitmap) {
             if (bitmap != null) {
                 this.mBitmap = bitmap;
             }
         }
 
-        public Renderer(final Context context, Bitmap bitmap) {
+        private Renderer(final Context context, Bitmap bitmap) {
             this.mBitmap = bitmap;
             initVertices();
             mVertexBuffer = ByteBuffer.allocateDirect(mCoords3DList.size() * Float.SIZE)
@@ -493,7 +492,7 @@ public class SJGLSurfaceView extends GLSurfaceView {
             return 0.5f + 0.5f * (float) Math.tanh(_fov * 0.0143 - 2.0);
         }
 
-        public void destroy() {
+        private void destroy() {
             GLES20.glDeleteTextures(1, new int[]{mTexHandle}, 0);
             if (mBitmap != null && !mBitmap.isRecycled()) {
                 mBitmap.recycle();
@@ -509,19 +508,7 @@ public class SJGLSurfaceView extends GLSurfaceView {
         }
     }
 
-    public interface PicChangeListener {
-        void positionUpdate(float fov,
-                            float yaw, float pitch,
-                            float width, float height);
-
-        void justClick();
-
-        void saveXYZ();
-    }
-
-    private PicChangeListener listener;
-
-    public void setListener(PicChangeListener listener) {
+    public void setListener(SJGLMoveListener listener) {
         this.listener = listener;
     }
 
@@ -547,27 +534,5 @@ public class SJGLSurfaceView extends GLSurfaceView {
 
     public synchronized void setPitch(float pitch) {
         this.pitch = pitch;
-    }
-
-    private String readAsset(String name, Context context) throws Exception {
-        InputStream is = null;
-        try {
-            is = context.getAssets().open(name);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return readTextFromSDcard(is);
-    }
-
-    private String readTextFromSDcard(InputStream is) throws Exception {
-        InputStreamReader reader = new InputStreamReader(is);
-        BufferedReader bufferedReader = new BufferedReader(reader);
-        StringBuilder buffer = new StringBuilder("");
-        String str;
-        while ((str = bufferedReader.readLine()) != null) {
-            buffer.append(str);
-            buffer.append("\n");
-        }
-        return buffer.toString();
     }
 }
