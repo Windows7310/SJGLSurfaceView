@@ -30,11 +30,6 @@ import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.egl.EGLSurface;
 import javax.microedition.khronos.opengles.GL10;
 
-/**
- * 基于 OGL 渲染全景图
- * Created by zhangkang on 2018/1/10.
- */
-
 public class SJGLSurfaceView extends GLSurfaceView {
     private static final String TAG = SJGLSurfaceView.class.getName();
     private Renderer mRenderer;
@@ -55,7 +50,7 @@ public class SJGLSurfaceView extends GLSurfaceView {
     private float mClickX, mClickY;//用于判断 是否是点击事件
 
     private int mMaxSize;
-//    @NotProguard
+
     public SJGLSurfaceView(Context context) {
         super(context);
         init();
@@ -66,7 +61,6 @@ public class SJGLSurfaceView extends GLSurfaceView {
         init();
     }
 
-//    @NotProguard
     public boolean setRenderer(Context context, int resId) {
         BitmapFactory.Options opt = new BitmapFactory.Options();
         opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
@@ -81,13 +75,12 @@ public class SJGLSurfaceView extends GLSurfaceView {
                 bitmap = BitmapFactory.decodeStream(stream);
             }
         } catch (OutOfMemoryError error) {
-            Log.e(TAG, "内存溢出！！！");
             return false;
         }
 
         if (bitmap != null) {
-            Log.d(TAG, "大小:" + bitmap.getByteCount() + "b ,--" + (double) bitmap.getByteCount() / 1024 / 1024 + "M --,宽度:"
-                    + bitmap.getWidth() + "--,高度:" + bitmap.getHeight());
+            Log.d(TAG, "size:" + bitmap.getByteCount() + "b ,--" + (double) bitmap.getByteCount() / 1024 / 1024 + "M --,width:"
+                    + bitmap.getWidth() + "--,height:" + bitmap.getHeight());
         } else {
             return false;
         }
@@ -97,9 +90,7 @@ public class SJGLSurfaceView extends GLSurfaceView {
         return true;
     }
 
-//    @NotProguard
     public boolean setRenderer(Context context, String path) {
-        System.out.println("path == > " + path);
         BitmapFactory.Options opt = new BitmapFactory.Options();
         opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
         opt.inPurgeable = true;
@@ -127,8 +118,8 @@ public class SJGLSurfaceView extends GLSurfaceView {
         }
 
         if (bitmap != null) {
-            Log.d(TAG, "大小:" + bitmap.getByteCount() + "b ,--" + (double) bitmap.getByteCount() / 1024 / 1024 + "M --,宽度:"
-                    + bitmap.getWidth() + "--,高度:" + bitmap.getHeight());
+            Log.d(TAG, "size:" + bitmap.getByteCount() + "b ,--" + (double) bitmap.getByteCount() / 1024 / 1024 + "M --,width:"
+                    + bitmap.getWidth() + "--,height:" + bitmap.getHeight());
         } else {
             return false;
         }
@@ -141,7 +132,7 @@ public class SJGLSurfaceView extends GLSurfaceView {
         }
         return true;
     }
-//    @NotProguard
+
     public void onDestroy() {
         if (mRenderer != null) {
             mRenderer.destroy();
@@ -156,7 +147,7 @@ public class SJGLSurfaceView extends GLSurfaceView {
             e.printStackTrace();
         }
     }
-//    @NotProguard
+
     public void setWidAndHei(int width, int height) {
         mWidth = width;
         mHeight = height;
@@ -215,7 +206,7 @@ public class SJGLSurfaceView extends GLSurfaceView {
                             fov = (float) (fov + fov * (scale - 1) * 0.2);
                             preDistance = distance;
                         }
-                    } catch (Exception e) {
+                    } catch (Exception ignored) {
 
                     }
                 }
@@ -252,7 +243,6 @@ public class SJGLSurfaceView extends GLSurfaceView {
         int[] maxSize = new int[1];
         GLES10.glGetIntegerv(GLES10.GL_MAX_TEXTURE_SIZE, maxSize, 0);
         mMaxSize = maxSize[0];
-        Log.e(TAG, "Max Size ===========" + maxSize[0]);
     }
 
     public void getGLESTextureLimitEqualAboveLollipop() {
@@ -293,7 +283,6 @@ public class SJGLSurfaceView extends GLSurfaceView {
         egl.eglDestroyContext(dpy, ctx);
         egl.eglTerminate(dpy);
         mMaxSize = maxSize[0];
-        Log.e(TAG, "Max Size ===========" + maxSize[0]);
     }
 
     private float getDistance(MotionEvent event) {
@@ -325,121 +314,46 @@ public class SJGLSurfaceView extends GLSurfaceView {
         private int mTexHandle;
         private Bitmap mBitmap;
 
-        private void genChildTri(
-                float ax, float ay, float az,
-                float bx, float by, float bz,
-                float cx, float cy, float cz,
-                int iteNum, List<Float> list) {
-
-            if (list == null)
-                return;
-
-            if (0 == iteNum) {
-                list.add(ax);
-                list.add(ay);
-                list.add(az);
-                list.add(bx);
-                list.add(by);
-                list.add(bz);
-                list.add(cx);
-                list.add(cy);
-                list.add(cz);
-                return;
-            }
-
-            float aax = 0.5f * (bx + cx);
-            float aay = 0.5f * (by + cy);
-            float aaz = 0.5f * (bz + cz);
-
-            float bbx = 0.5f * (ax + cx);
-            float bby = 0.5f * (ay + cy);
-            float bbz = 0.5f * (az + cz);
-
-            float ccx = 0.5f * (bx + ax);
-            float ccy = 0.5f * (by + ay);
-            float ccz = 0.5f * (bz + az);
-
-            // normlize
-            float normaa = 1.f / ((float) Math.sqrt(aax * aax + aay * aay + aaz * aaz));
-            aax *= normaa;
-            aay *= normaa;
-            aaz *= normaa;
-
-            float normbb = 1.f / ((float) Math.sqrt(bbx * bbx + bby * bby + bbz * bbz));
-            bbx *= normbb;
-            bby *= normbb;
-            bbz *= normbb;
-
-            float normcc = 1.f / ((float) Math.sqrt(ccx * ccx + ccy * ccy + ccz * ccz));
-            ccx *= normcc;
-            ccy *= normcc;
-            ccz *= normcc;
-
-            genChildTri(
-                    aax, aay, aaz,
-                    bx, by, bz,
-                    ccx, ccy, ccz,
-                    iteNum - 1, mCoords3DList);
-
-            genChildTri(
-                    ax, ay, az,
-                    bbx, bby, bbz,
-                    ccx, ccy, ccz,
-                    iteNum - 1, mCoords3DList);
-
-            genChildTri(
-                    aax, aay, aaz,
-                    bbx, bby, bbz,
-                    cx, cy, cz,
-                    iteNum - 1, mCoords3DList);
-
-            genChildTri(
-                    aax, aay, aaz,
-                    bbx, bby, bbz,
-                    ccx, ccy, ccz,
-                    iteNum - 1, mCoords3DList);
-        }
-
         private void initVertices() {
 
             // mCoords3DList.clear();
 
-            genChildTri(
+            a.genChildTri(
                     0.0f, 1.0f, 0.0f,
                     0.707f, 0.0f, -0.707f,
                     0.707f, 0.0f, 0.707f,
                     IterationsNum, mCoords3DList);
-            genChildTri(
+            a.genChildTri(
                     0.0f, 1.0f, 0.0f,
                     0.707f, 0.0f, 0.707f,
                     -0.707f, 0.0f, 0.707f,
                     IterationsNum, mCoords3DList);
-            genChildTri(
+            a.genChildTri(
                     0.0f, 1.0f, 0.0f,
                     -0.707f, 0.0f, 0.707f,
                     -0.707f, 0.0f, -0.707f,
                     IterationsNum, mCoords3DList);
-            genChildTri(
+            a.genChildTri(
                     0.0f, 1.0f, 0.0f,
                     -0.707f, 0.0f, -0.707f,
                     0.707f, 0.0f, -0.707f,
                     IterationsNum, mCoords3DList);
-            genChildTri(
+            a.genChildTri(
                     0.0f, -1.0f, -0.0f,
                     0.707f, 0.0f, -0.707f,
                     0.707f, 0.0f, 0.707f,
                     IterationsNum, mCoords3DList);
-            genChildTri(
+            a.genChildTri(
                     0.0f, -1.0f, -0.0f,
                     0.707f, 0.0f, 0.707f,
                     -0.707f, 0.0f, 0.707f,
                     IterationsNum, mCoords3DList);
-            genChildTri(
+            a.genChildTri(
                     0.0f, -1.0f, -0.0f,
                     -0.707f, 0.0f, 0.707f,
                     -0.707f, 0.0f, -0.707f,
                     IterationsNum, mCoords3DList);
-            genChildTri(
+            a.genChildTri(
                     0.0f, -1.0f, -0.0f,
                     -0.707f, 0.0f, -0.707f,
                     0.707f, 0.0f, -0.707f,
@@ -454,9 +368,7 @@ public class SJGLSurfaceView extends GLSurfaceView {
 
         public Renderer(final Context context, Bitmap bitmap) {
             this.mBitmap = bitmap;
-
             initVertices();
-
             mVertexBuffer = ByteBuffer.allocateDirect(mCoords3DList.size() * Float.SIZE)
                     .order(ByteOrder.nativeOrder())
                     .asFloatBuffer();
@@ -606,34 +518,31 @@ public class SJGLSurfaceView extends GLSurfaceView {
     }
 
     private PicChangeListener listener;
-//    @NotProguard
+
     public void setListener(PicChangeListener listener) {
         this.listener = listener;
     }
 
-//    @NotProguard
     public synchronized float getYaw() {
         return yaw;
     }
-//    @NotProguard
+
     public synchronized void setYaw(float yaw) {
         this.yaw = yaw;
     }
 
-//    @NotProguard
     public synchronized float getFov() {
         return fov;
     }
-//    @NotProguard
+
     public synchronized void setFov(float fov) {
         this.fov = fov;
     }
 
-//    @NotProguard
     public synchronized float getPitch() {
         return pitch;
     }
-//    @NotProguard
+
     public synchronized void setPitch(float pitch) {
         this.pitch = pitch;
     }

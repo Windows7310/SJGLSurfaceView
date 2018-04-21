@@ -33,7 +33,4 @@
 #@cn.trinea.android.common.annotation.NotProguard <methods>;
 #}
 
--keepclasseswithmembers class * extends GLSurfaceView{
-    <fields>;
-    <methods>;
-}
+-keep public class * SJGLSurfaceView
