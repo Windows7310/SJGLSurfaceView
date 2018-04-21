@@ -23,3 +23,17 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# keep annotated by NotProguard
+#-keep @cn.trinea.android.common.annotation.NotProguard class * {*;}
+#-keep class * {
+#@cn.trinea.android.common.annotation.NotProguard <fields>;
+#}
+#-keepclassmembers class * {
+#@cn.trinea.android.common.annotation.NotProguard <methods>;
+#}
+
+-keepclasseswithmembers class SJGLSurfaceView {
+    <fields>;
+    <methods>;
+}

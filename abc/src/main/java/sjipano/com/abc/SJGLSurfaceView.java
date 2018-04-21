@@ -52,11 +52,10 @@ public class SJGLSurfaceView extends GLSurfaceView {
     private static String FRAGMENT_SHADER = "1";
     private static String VERTEX_SHADER = "1";
 
-    private boolean move = true;
     private float mClickX, mClickY;//用于判断 是否是点击事件
 
     private int mMaxSize;
-
+    @NotProguard
     public SJGLSurfaceView(Context context) {
         super(context);
         init();
@@ -67,6 +66,7 @@ public class SJGLSurfaceView extends GLSurfaceView {
         init();
     }
 
+    @NotProguard
     public boolean setRenderer(Context context, int resId) {
         BitmapFactory.Options opt = new BitmapFactory.Options();
         opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
@@ -97,6 +97,7 @@ public class SJGLSurfaceView extends GLSurfaceView {
         return true;
     }
 
+    @NotProguard
     public boolean setRenderer(Context context, String path) {
         System.out.println("path == > " + path);
         BitmapFactory.Options opt = new BitmapFactory.Options();
@@ -140,7 +141,7 @@ public class SJGLSurfaceView extends GLSurfaceView {
         }
         return true;
     }
-
+    @NotProguard
     public void onDestroy() {
         if (mRenderer != null) {
             mRenderer.destroy();
@@ -155,7 +156,7 @@ public class SJGLSurfaceView extends GLSurfaceView {
             e.printStackTrace();
         }
     }
-
+    @NotProguard
     public void setWidAndHei(int width, int height) {
         mWidth = width;
         mHeight = height;
@@ -605,46 +606,39 @@ public class SJGLSurfaceView extends GLSurfaceView {
     }
 
     private PicChangeListener listener;
-
+    @NotProguard
     public void setListener(PicChangeListener listener) {
         this.listener = listener;
     }
 
-    private synchronized void setMove(boolean move) {
-        this.move = move;
-    }
-
-    private synchronized boolean getMove() {
-        return move;
-    }
-
+    @NotProguard
     public synchronized float getYaw() {
         return yaw;
     }
-
+    @NotProguard
     public synchronized void setYaw(float yaw) {
         this.yaw = yaw;
     }
 
+    @NotProguard
     public synchronized float getFov() {
         return fov;
     }
-
+    @NotProguard
     public synchronized void setFov(float fov) {
         this.fov = fov;
     }
 
+    @NotProguard
     public synchronized float getPitch() {
         return pitch;
     }
-
+    @NotProguard
     public synchronized void setPitch(float pitch) {
         this.pitch = pitch;
     }
 
-
-
-    public String readAsset(String name, Context context) throws Exception {
+    private String readAsset(String name, Context context) throws Exception {
         InputStream is = null;
         try {
             is = context.getAssets().open(name);
