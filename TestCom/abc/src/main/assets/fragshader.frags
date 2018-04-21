@@ -1,0 +1,17 @@
+#ifdef GL_ES
+precision highp float;
+#endif
+		
+varying vec3 xyz;
+
+uniform sampler2D _pano_texture;
+
+void main()
+{
+	float theta, phi;
+    theta = atan( xyz.x , -xyz.z );
+    theta = theta*0.5/3.1415926 + 0.5;
+
+    phi = atan( xyz.y , length(vec2(xyz.x, xyz.z)) )/3.1415926 - 0.5;
+    gl_FragColor = texture2D(_pano_texture, vec2(theta, -phi));
+}

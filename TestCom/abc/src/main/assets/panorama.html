@@ -1,0 +1,194 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>Draw quad with texture</title>
+  <script src="./lib/webgl-utils.js"></script>
+  <script src="./lib/webgl-debug.js"></script>
+  <script src="./lib/cuon-utils.js"></script>
+  <script src="./lib/cuon-matrix.js"></script>
+  <style>
+    ul,
+    li,
+    div,
+    html,
+    body,
+    img {
+      margin: 0;
+      padding: 0;
+    }
+
+    li {
+      list-style: none
+    }
+
+    .main {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .lightBox {
+      display: none;
+      width: 100%;
+      height: 90px;
+      background-color: rgba(0, 0, 0, 0.4);
+      position: absolute;
+      bottom: 2rem;
+      transition: all 0.5s;
+    }
+
+    .lightBox ul {
+      display: flex;
+      justify-content: space-between;
+      position: absolute;
+    }
+
+    .lightBox ul>li {
+      position: relative;
+      height: 88px;
+      width: 88px;
+      border: 1px solid white;
+      transition: all 0.5s;
+    }
+
+    .lightBox img {
+      height: 100%;
+      width: 100%;
+      opacity: 0.8;
+    }
+
+    .lightBox img:hover {
+      opacity: 1.0;
+    }
+
+    .lightBox ul .active {
+      border: 1px solid orange;
+    }
+
+    .lightBox ul .name {
+      width: 100%;
+      position: absolute;
+      bottom: 7.2px;
+      text-align: center;
+      color: white;
+      font-size: 14.4px;
+    }
+
+    .map {
+      display: none;
+      position: absolute;
+      right: 55px;
+      top: 15px;
+      width: 130px;
+      height: 200px;
+      background-color: white;
+    }
+
+    .map .sight {
+      position: absolute;
+      width: 130px;
+      height: 65px;
+      overflow: hidden;
+      transform-origin: 50% 100%;
+    }
+
+    .map .sight .sector {
+      height: inherit;
+      width: inherit;
+      position: absolute;
+      content: "";
+      border-radius: 100px 100px 0 0;
+      background-color: crimson;
+      transform-origin: 50% 100%;
+      transform: rotate(140deg);
+      opacity: 0.5;
+    }
+
+    .map .source {
+      position: absolute;
+      width: 15px;
+      height: 15px;
+      border-radius: 15px;
+      background-color: red;
+    }
+
+    canvas {
+      opacity: 1;
+      transition: all 1s;
+    }
+
+    .main .hot {
+      display: none;
+      background-color: red;
+      border-radius: 5px;
+      width: 10px;
+      height: 10px;
+      position: absolute;
+      left: 750px;
+      bottom: 250px;
+    }
+
+    .fps {
+      position: absolute;
+    }
+
+    html {
+      font-size: 72px;
+      color: white;
+    }
+  </style>
+</head>
+
+<body onload="main()">
+  <div class="main">
+    <div class="fps">
+    </div>
+    <div class="hot"></div>
+    <div class="map">
+      <div class="sight">
+        <div class="sector"></div>
+      </div>
+      <div class="source" style="left: 16%; top: 32%;"></div>
+      <div class="source" style="left: 60%; top: 80%;"></div>
+      <div class="source" style="left: 16%; top: 80%;"></div>
+    </div>
+
+    <div class="lightBox">
+      <ul>
+        <li>
+          <img src="./resources/emp.jpg" />
+          <div class="name">aaaa</div>
+        </li>
+        <li>
+          <img src="./resources/ddd.jpg" />
+          <div class="name">bbbb</div>
+        </li>
+        <li>
+          <img src="./resources/skybox/nz.jpg" />
+          <div class="name">cccc</div>
+        </li>
+        <li>
+          <img src="./resources/skybox/px.jpg" />
+          <div class="name">我大舅舅</div>
+        </li>
+        <li>
+          <img src="./resources/skybox/py.jpg" />
+          <div class="name">eeee</div>
+        </li>
+        <li>
+          <img src="./resources/skybox/pz.jpg" />
+          <div class="name">ffff</div>
+        </li>
+      </ul>
+    </div>
+    <canvas>
+      Please use a browser that supports "canvas"
+    </canvas>
+  </div>
+  <script src="panorama.js"></script>
+</body>
+
+</html>
