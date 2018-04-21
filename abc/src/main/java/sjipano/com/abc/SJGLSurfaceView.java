@@ -11,9 +11,12 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -60,7 +63,6 @@ public class SJGLSurfaceView extends GLSurfaceView {
         init();
     }
 
-    @NotProguard
     public boolean setRenderer(Context context, int resId) {
         BitmapFactory.Options opt = new BitmapFactory.Options();
         opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
@@ -90,7 +92,6 @@ public class SJGLSurfaceView extends GLSurfaceView {
         return true;
     }
 
-    @NotProguard
     public boolean setRenderer(Context context, String path) {
         BitmapFactory.Options opt = new BitmapFactory.Options();
         opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
@@ -142,8 +143,8 @@ public class SJGLSurfaceView extends GLSurfaceView {
 
     private void init() {
         try {
-            FRAGMENT_SHADER = a.readAsset("fragshader.frags", getContext());
-            VERTEX_SHADER = a.readAsset("vertshader.vs", getContext());
+            FRAGMENT_SHADER = readAsset("fragshader.frags", getContext());
+            VERTEX_SHADER = readAsset("vertshader.vs", getContext());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -319,42 +320,42 @@ public class SJGLSurfaceView extends GLSurfaceView {
 
             // mCoords3DList.clear();
 
-            a.genChildTri(
+            genChildTri(
                     0.0f, 1.0f, 0.0f,
                     0.707f, 0.0f, -0.707f,
                     0.707f, 0.0f, 0.707f,
                     IterationsNum, mCoords3DList);
-            a.genChildTri(
+            genChildTri(
                     0.0f, 1.0f, 0.0f,
                     0.707f, 0.0f, 0.707f,
                     -0.707f, 0.0f, 0.707f,
                     IterationsNum, mCoords3DList);
-            a.genChildTri(
+            genChildTri(
                     0.0f, 1.0f, 0.0f,
                     -0.707f, 0.0f, 0.707f,
                     -0.707f, 0.0f, -0.707f,
                     IterationsNum, mCoords3DList);
-            a.genChildTri(
+            genChildTri(
                     0.0f, 1.0f, 0.0f,
                     -0.707f, 0.0f, -0.707f,
                     0.707f, 0.0f, -0.707f,
                     IterationsNum, mCoords3DList);
-            a.genChildTri(
+            genChildTri(
                     0.0f, -1.0f, -0.0f,
                     0.707f, 0.0f, -0.707f,
                     0.707f, 0.0f, 0.707f,
                     IterationsNum, mCoords3DList);
-            a.genChildTri(
+            genChildTri(
                     0.0f, -1.0f, -0.0f,
                     0.707f, 0.0f, 0.707f,
                     -0.707f, 0.0f, 0.707f,
                     IterationsNum, mCoords3DList);
-            a.genChildTri(
+            genChildTri(
                     0.0f, -1.0f, -0.0f,
                     -0.707f, 0.0f, 0.707f,
                     -0.707f, 0.0f, -0.707f,
                     IterationsNum, mCoords3DList);
-            a.genChildTri(
+            genChildTri(
                     0.0f, -1.0f, -0.0f,
                     -0.707f, 0.0f, -0.707f,
                     0.707f, 0.0f, -0.707f,
@@ -534,5 +535,102 @@ public class SJGLSurfaceView extends GLSurfaceView {
 
     public synchronized void setPitch(float pitch) {
         this.pitch = pitch;
+    }
+
+    private void genChildTri(
+            float ax, float ay, float az,
+            float bx, float by, float bz,
+            float cx, float cy, float cz,
+            int iteNum, List<Float> list) {
+
+        if (list == null)
+            return;
+
+        if (0 == iteNum) {
+            list.add(ax);
+            list.add(ay);
+            list.add(az);
+            list.add(bx);
+            list.add(by);
+            list.add(bz);
+            list.add(cx);
+            list.add(cy);
+            list.add(cz);
+            return;
+        }
+
+        float aax = 0.5f * (bx + cx);
+        float aay = 0.5f * (by + cy);
+        float aaz = 0.5f * (bz + cz);
+
+        float bbx = 0.5f * (ax + cx);
+        float bby = 0.5f * (ay + cy);
+        float bbz = 0.5f * (az + cz);
+
+        float ccx = 0.5f * (bx + ax);
+        float ccy = 0.5f * (by + ay);
+        float ccz = 0.5f * (bz + az);
+
+        // normlize
+        float normaa = 1.f / ((float) Math.sqrt(aax * aax + aay * aay + aaz * aaz));
+        aax *= normaa;
+        aay *= normaa;
+        aaz *= normaa;
+
+        float normbb = 1.f / ((float) Math.sqrt(bbx * bbx + bby * bby + bbz * bbz));
+        bbx *= normbb;
+        bby *= normbb;
+        bbz *= normbb;
+
+        float normcc = 1.f / ((float) Math.sqrt(ccx * ccx + ccy * ccy + ccz * ccz));
+        ccx *= normcc;
+        ccy *= normcc;
+        ccz *= normcc;
+
+        genChildTri(
+                aax, aay, aaz,
+                bx, by, bz,
+                ccx, ccy, ccz,
+                iteNum - 1, list);
+
+        genChildTri(
+                ax, ay, az,
+                bbx, bby, bbz,
+                ccx, ccy, ccz,
+                iteNum - 1, list);
+
+        genChildTri(
+                aax, aay, aaz,
+                bbx, bby, bbz,
+                cx, cy, cz,
+                iteNum - 1, list);
+
+        genChildTri(
+                aax, aay, aaz,
+                bbx, bby, bbz,
+                ccx, ccy, ccz,
+                iteNum - 1, list);
+    }
+
+    private String readAsset(String name, Context context) throws Exception {
+        InputStream is = null;
+        try {
+            is = context.getAssets().open(name);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return readTextFromSDcard(is);
+    }
+
+    private String readTextFromSDcard(InputStream is) throws Exception {
+        InputStreamReader reader = new InputStreamReader(is);
+        BufferedReader bufferedReader = new BufferedReader(reader);
+        StringBuilder buffer = new StringBuilder("");
+        String str;
+        while ((str = bufferedReader.readLine()) != null) {
+            buffer.append(str);
+            buffer.append("\n");
+        }
+        return buffer.toString();
     }
 }
