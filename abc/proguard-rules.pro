@@ -33,7 +33,9 @@
 @cn.trinea.android.common.annotation.NotProguard <methods>;
 }
 
--keep public class sjipano.com.abc.SJGLMoveListener
+-keep public class sjipano.com.abc.SJGLMoveListener {
+    *;
+}
 -keep public class sjipano.com.abc.SJGLSurfaceView
 -keep public class sjipano.com.abc.SJGLSurfaceView {
     public *;
