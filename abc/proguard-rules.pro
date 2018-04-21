@@ -33,4 +33,4 @@
 #@cn.trinea.android.common.annotation.NotProguard <methods>;
 #}
 
--keep public class SJGLSurfaceView
+-keep public class sjipano.com.abc.SJGLSurfaceView
