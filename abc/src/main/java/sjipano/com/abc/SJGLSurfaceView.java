@@ -55,7 +55,7 @@ public class SJGLSurfaceView extends GLSurfaceView {
     private float mClickX, mClickY;//用于判断 是否是点击事件
 
     private int mMaxSize;
-    @NotProguard
+//    @NotProguard
     public SJGLSurfaceView(Context context) {
         super(context);
         init();
@@ -66,7 +66,7 @@ public class SJGLSurfaceView extends GLSurfaceView {
         init();
     }
 
-    @NotProguard
+//    @NotProguard
     public boolean setRenderer(Context context, int resId) {
         BitmapFactory.Options opt = new BitmapFactory.Options();
         opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
@@ -97,7 +97,7 @@ public class SJGLSurfaceView extends GLSurfaceView {
         return true;
     }
 
-    @NotProguard
+//    @NotProguard
     public boolean setRenderer(Context context, String path) {
         System.out.println("path == > " + path);
         BitmapFactory.Options opt = new BitmapFactory.Options();
@@ -141,7 +141,7 @@ public class SJGLSurfaceView extends GLSurfaceView {
         }
         return true;
     }
-    @NotProguard
+//    @NotProguard
     public void onDestroy() {
         if (mRenderer != null) {
             mRenderer.destroy();
@@ -156,7 +156,7 @@ public class SJGLSurfaceView extends GLSurfaceView {
             e.printStackTrace();
         }
     }
-    @NotProguard
+//    @NotProguard
     public void setWidAndHei(int width, int height) {
         mWidth = width;
         mHeight = height;
@@ -606,34 +606,34 @@ public class SJGLSurfaceView extends GLSurfaceView {
     }
 
     private PicChangeListener listener;
-    @NotProguard
+//    @NotProguard
     public void setListener(PicChangeListener listener) {
         this.listener = listener;
     }
 
-    @NotProguard
+//    @NotProguard
     public synchronized float getYaw() {
         return yaw;
     }
-    @NotProguard
+//    @NotProguard
     public synchronized void setYaw(float yaw) {
         this.yaw = yaw;
     }
 
-    @NotProguard
+//    @NotProguard
     public synchronized float getFov() {
         return fov;
     }
-    @NotProguard
+//    @NotProguard
     public synchronized void setFov(float fov) {
         this.fov = fov;
     }
 
-    @NotProguard
+//    @NotProguard
     public synchronized float getPitch() {
         return pitch;
     }
-    @NotProguard
+//    @NotProguard
     public synchronized void setPitch(float pitch) {
         this.pitch = pitch;
     }
