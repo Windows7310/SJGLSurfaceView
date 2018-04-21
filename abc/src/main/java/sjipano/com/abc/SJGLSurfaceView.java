@@ -61,6 +61,7 @@ public class SJGLSurfaceView extends GLSurfaceView {
         init();
     }
 
+    @NotProguard
     public boolean setRenderer(Context context, int resId) {
         BitmapFactory.Options opt = new BitmapFactory.Options();
         opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
@@ -90,6 +91,7 @@ public class SJGLSurfaceView extends GLSurfaceView {
         return true;
     }
 
+    @NotProguard
     public boolean setRenderer(Context context, String path) {
         BitmapFactory.Options opt = new BitmapFactory.Options();
         opt.inPreferredConfig = Bitmap.Config.ARGB_8888;

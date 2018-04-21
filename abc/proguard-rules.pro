@@ -25,12 +25,15 @@
 #-renamesourcefileattribute SourceFile
 
 # keep annotated by NotProguard
-#-keep @cn.trinea.android.common.annotation.NotProguard class * {*;}
-#-keep class * {
-#@cn.trinea.android.common.annotation.NotProguard <fields>;
-#}
-#-keepclassmembers class * {
-#@cn.trinea.android.common.annotation.NotProguard <methods>;
-#}
+-keep @cn.trinea.android.common.annotation.NotProguard class * {*;}
+-keep class * {
+@cn.trinea.android.common.annotation.NotProguard <fields>;
+}
+-keepclassmembers class * {
+@cn.trinea.android.common.annotation.NotProguard <methods>;
+}
 
 -keep public class sjipano.com.abc.SJGLSurfaceView
+-keep public class sjipano.com.abc.SJGLSurfaceView {
+    public *;
+}
