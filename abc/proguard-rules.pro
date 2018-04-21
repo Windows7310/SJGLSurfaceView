@@ -39,3 +39,6 @@
 -keep public class sjipano.com.abc.SJGLSurfaceView {
     public *;
 }
+-keep public sjipano.com.abc.SJGLUtils {
+    public *;
+}

@@ -1,4 +1,4 @@
-package com.sjipano.client.common;
+package sjipano.com.abc;
 
 import static java.lang.Math.PI;
 import static java.lang.Math.cos;
@@ -9,14 +9,14 @@ import static java.lang.Math.sin;
  * Created by zhangkang on 2018/1/12.
  */
 
-public class SJ3To2Util {
+public class SJGLUtils {
 
     /**
      * 计算参数
      * @param fov
      * @return
      */
-    public static double sji_calc_d(double fov) {
+    private static double sji_calc_d(double fov) {
         return 0.5d + 0.5d * Math.tanh( fov*0.0143 - 2.0);
     }
 
